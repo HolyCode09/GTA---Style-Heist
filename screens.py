@@ -1,5 +1,6 @@
 import pygame
 import sys
+from pyvidplayer import Video
 from assets import (
     opening_theme,
     gameIcon,
@@ -7,9 +8,10 @@ from assets import (
     bgPic,
     opening_sound,
     characters_sound,
-    startSound
+    startSound,
+    video_bg_music
 )
-from functions import font_size
+from functions import font_size, playVid
 
 screenWidth, screenHeight = 1600,900
 screen = pygame.display.set_mode((screenWidth, screenHeight))
@@ -22,7 +24,7 @@ def StartScreen():
 
     opening_theme.set_volume(1)
     opening_theme.play(-1)
-    opening_sound.set_volume(0.1)
+    opening_sound.set_volume(0.3)
     opening_sound.play()
 
     screen.blit(bgPic, (0,0))
@@ -82,7 +84,7 @@ def CharactersScreen():
         pygame.time.delay(20)
     screen.blit(charactersPic, (-5,-5))
     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-    characters_sound.set_volume(0.1)
+    characters_sound.set_volume(0.3)
     characters_sound.play()
 
     pygame.time.delay(1000)
@@ -133,5 +135,20 @@ def CharactersScreen():
                         pygame.display.flip()
                         pygame.time.delay(50)
                     opening_theme.stop()
+                    preGameVideo()
                     return
             pygame.display.flip()
+
+
+def preGameVideo():
+    global video_bg_music
+    pygame.time.delay(1000)
+    video_bg_music.set_volume(0)
+    video_bg_music.play(-1)
+    for i in range(11):
+        video_bg_music.set_volume(0.05 * i / 10)
+        pygame.time.delay(100)
+    pygame.time.delay(1000)
+    playVid("video/gameVideo.mp4", screen, screenWidth, screenHeight)
+    video_bg_music.stop()
+    return

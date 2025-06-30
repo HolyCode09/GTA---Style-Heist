@@ -1,4 +1,6 @@
 import pygame
+from pyvidplayer import Video
+
 pygame.mixer.init()
 
 def load_sound(path):
@@ -12,3 +14,18 @@ def load_img(path, size=None):
     if size:
         img = pygame.transform.scale(img, size)
     return img
+
+def playVid(path, screen, screenWidth, screenHeight):
+    vid = Video(path)
+    vid.set_size((screenWidth,screenHeight))
+    while True:
+        vid.draw(screen, (0,0))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pass
+            if event.type == pygame.QUIT:
+                vid.close()
+                pygame.quit()
+                
+                
