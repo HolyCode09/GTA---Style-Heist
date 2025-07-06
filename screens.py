@@ -9,7 +9,9 @@ from assets import (
     opening_sound,
     characters_sound,
     startSound,
-    video_bg_music
+    video_bg_music,
+    missionMusic,
+    map1
 )
 from functions import font_size, playVid
 
@@ -151,4 +153,32 @@ def preGameVideo():
     pygame.time.delay(1000)
     playVid("video/gameVideo.mp4", screen, screenWidth, screenHeight)
     video_bg_music.stop()
+    gameStart()
     return
+
+
+def gameStart():
+    missionMusic.set_volume(0.3)
+    missionMusic.play(-1)
+    pygame.mouse.set_visible(False)
+
+    screen.fill((0, 0, 0))
+
+    pygame.time.delay(8000)
+
+    for alpha in range(255, -1, -1):
+        fade_surface = pygame.Surface((screenWidth, screenHeight))
+        fade_surface.fill((0, 0, 0))
+        fade_surface.set_alpha(alpha)
+        screen.blit(map1, (-10, 0))
+        screen.blit(fade_surface, (0, 0))
+        pygame.display.flip()
+        pygame.time.delay(20)
+
+    while True:
+        screen.blit(map1, (-10, 0))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()

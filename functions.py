@@ -17,15 +17,27 @@ def load_img(path, size=None):
 
 def playVid(path, screen, screenWidth, screenHeight):
     vid = Video(path)
-    vid.set_size((screenWidth,screenHeight))
+    vid.set_size((screenWidth, screenHeight))
+    
+    clock = pygame.time.Clock()
+    
     while True:
-        vid.draw(screen, (0,0))
+        done = not vid.draw(screen, (0, 0))
         pygame.display.update()
+        clock.tick(60)
+
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pass
             if event.type == pygame.QUIT:
                 vid.close()
                 pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                done = True
+
+        if done:
+            break
+
+    vid.close()
+
                 
                 
