@@ -11,7 +11,10 @@ from assets import (
     startSound,
     video_bg_music,
     missionMusic,
-    map1
+    map1,
+    clockTick,
+    carStops, 
+    timeHolder
 )
 from functions import font_size, playVid
 
@@ -144,6 +147,7 @@ def CharactersScreen():
 
 def preGameVideo():
     global video_bg_music
+    pygame.mouse.set_visible(False)
     pygame.time.delay(1000)
     video_bg_music.set_volume(0)
     video_bg_music.play(-1)
@@ -158,27 +162,68 @@ def preGameVideo():
 
 
 def gameStart():
-    missionMusic.set_volume(0.3)
+    missionMusic.set_volume(1)
     missionMusic.play(-1)
-    pygame.mouse.set_visible(False)
+
+    clock = pygame.time.Clock()
+
+    minuteChange = 0
 
     screen.fill((0, 0, 0))
 
-    pygame.time.delay(8000)
+    # pygame.time.delay(1000)
 
+    # for alpha in range(0, 256, 1):
+    #     startText = font_size(200).render("You have until 9PM", True, (alpha, alpha, alpha))
+    #     screen.blit(startText, (screenWidth // 2 - startText.get_width() // 2, screenHeight // 2 - startText.get_height() // 2))
+    #     pygame.display.flip()
+    #     pygame.time.delay(10)
+
+    # pygame.time.delay(4000)
+
+    # for alpha in range(0, 256, 1):
+    #     fade_surface = pygame.Surface((screenWidth, screenHeight))
+    #     fade_surface.fill((0, 0, 0))
+    #     fade_surface.set_alpha(alpha)
+    #     screen.blit(fade_surface, (0, 0))
+    #     pygame.display.flip()
+    #     pygame.time.delay(20)
+
+    # carStops.set_volume(0.8)
+    # carStops.play()
+
+    clock_text = font_size(70).render("8:00PM", True, (255, 255, 255))
     for alpha in range(255, -1, -1):
         fade_surface = pygame.Surface((screenWidth, screenHeight))
         fade_surface.fill((0, 0, 0))
         fade_surface.set_alpha(alpha)
         screen.blit(map1, (-10, 0))
+        screen.blit(timeHolder, (screenWidth // 2 - timeHolder.get_width() // 2, -20))
+        screen.blit(clock_text, (screenWidth // 2 - clock_text.get_width() // 2, 0))
         screen.blit(fade_surface, (0, 0))
         pygame.display.flip()
-        pygame.time.delay(20)
+        pygame.time.delay(10)
 
+    start_ticks = pygame.time.get_ticks()
     while True:
         screen.blit(map1, (-10, 0))
+
+        current_ticks = pygame.time.get_ticks()
+        elapsed_time = current_ticks - start_ticks
+        in_game_minutes = elapsed_time // 20000
+        in_game_hour = 8 + (in_game_minutes // 60)
+        in_game_minutes = in_game_minutes % 60
+
+        clock_text = font_size(70).render(f"{in_game_hour}:{in_game_minutes:02}PM", True, (255, 255, 255))
+        screen.blit(timeHolder, (screenWidth // 2 - timeHolder.get_width() // 2, -20))
+        screen.blit(clock_text, (screenWidth // 2 - clock_text.get_width() // 2, 0))
+        if minuteChange != in_game_minutes:
+            clockTick.play()
+            minuteChange = in_game_minutes
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+        pygame.display.flip()
+        clock.tick(60)
