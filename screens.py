@@ -9,12 +9,16 @@ from assets import (
     opening_sound,
     characters_sound,
     startSound,
+<<<<<<< HEAD
     video_bg_music,
     missionMusic,
     map1,
     clockTick,
     carStops, 
     timeHolder
+=======
+    video_bg_music
+>>>>>>> 3be00e6599a540745c4798d9648949c91ff347b2
 )
 from functions import font_size, playVid
 
@@ -147,7 +151,10 @@ def CharactersScreen():
 
 def preGameVideo():
     global video_bg_music
+<<<<<<< HEAD
     pygame.mouse.set_visible(False)
+=======
+>>>>>>> 3be00e6599a540745c4798d9648949c91ff347b2
     pygame.time.delay(1000)
     video_bg_music.set_volume(0)
     video_bg_music.play(-1)
@@ -157,6 +164,7 @@ def preGameVideo():
     pygame.time.delay(1000)
     playVid("video/gameVideo.mp4", screen, screenWidth, screenHeight)
     video_bg_music.stop()
+<<<<<<< HEAD
     gameStart()
     return
 
@@ -227,3 +235,6 @@ def gameStart():
                 sys.exit()
         pygame.display.flip()
         clock.tick(60)
+=======
+    return
+>>>>>>> 3be00e6599a540745c4798d9648949c91ff347b2
