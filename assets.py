@@ -1,12 +1,13 @@
 import pygame
 from functions import load_img, load_sound
+from values import screenWidth, screenHeight, vw, vh
 
 #images
 gameIcon = load_img("pics/gameIcon.png")
-charactersPic = load_img("pics/characters.png", (1376,778))
-bgPic = load_img("pics/gameEnter.png", (1366, 768))
-map1 = load_img("pics/maps/map1.png", (1376, 768))
-timeHolder = load_img("pics/screenAssets/timeHolder.png", (300, 100))
+charactersPic = load_img("pics/characters.png", (screenWidth + 10, screenHeight + 10))
+bgPic = load_img("pics/gameEnter.png", (screenWidth, screenHeight))
+map1 = load_img("pics/maps/map1.png", (screenWidth + 10, screenHeight))
+timeHolder = load_img("pics/screenAssets/timeHolder.png", (20 * vw, 10 * vh))
 
 #sounds
 opening_theme = load_sound("sounds/OpeningTheme.mp3")

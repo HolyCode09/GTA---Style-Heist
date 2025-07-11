@@ -33,7 +33,7 @@ while running:
                     rColor += 30
                 if health <= 4:
                     gColor -= 30
-            print(rColor, gColor, health, 200 * (health / 10) - 10)
+            print(rColor, gColor, health, (health * 25) - 10)
                 
 
 
@@ -43,7 +43,7 @@ while running:
     screen.fill((30, 30, 30))  # Fill the screen with a dark gray color
 
     pygame.draw.rect(screen, (0, 0, 0), (55, 55, 260 - 10, 40), 0, 100)
-    pygame.draw.rect(screen, (rColor, gColor, 0), (55, 55, (health * 25), 40), 0, 0)
+    pygame.draw.rect(screen, (rColor, gColor, 0), (55, 55, (health * 25) -10, 40), 0, 0)
     pygame.draw.rect(screen, (255, 255, 255), (45, 45, 260, 60), 10, 100)
 
     pygame.display.flip()

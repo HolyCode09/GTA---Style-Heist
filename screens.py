@@ -1,6 +1,17 @@
 import pygame
 import sys
 from pyvidplayer import Video
+
+from functions import font_size, playVid
+import values
+
+values.screen = pygame.display.set_mode()
+pygame.display.set_caption("GTA - Style Heist")
+values.screenWidth, values.screenHeight = values.screen.get_size()
+
+values.vw = values.screenWidth // 100
+values.vh = values.screenHeight // 100
+
 from assets import (
     opening_theme,
     gameIcon,
@@ -16,12 +27,16 @@ from assets import (
     carStops, 
     timeHolder
 )
-from functions import font_size, playVid
-
-screenWidth, screenHeight = 1366,768
-screen = pygame.display.set_mode((screenWidth, screenHeight))
-pygame.display.set_caption("GTA - Style Heist")
 pygame.display.set_icon(gameIcon)
+
+screen = values.screen
+screenWidth = values.screenWidth
+screenHeight = values.screenHeight
+vw = values.vw
+vh = values.vh
+
+print(screenWidth, screenHeight, vw, vh)
+
 
 def StartScreen():
 
@@ -34,9 +49,8 @@ def StartScreen():
 
     screen.blit(bgPic, (0,0))
 
-    startBtn = pygame.Surface((400,200), pygame.SRCALPHA)
-
-    startBtnRect = startBtn.get_rect(topleft=(600, 320))
+    startBtn = pygame.Surface((27*vw,15*vh), pygame.SRCALPHA)
+    startBtnRect = startBtn.get_rect(topleft=(38*vw, 44*vh))
 
     screen.blit(startBtn, startBtnRect.topleft)
 
@@ -94,14 +108,14 @@ def CharactersScreen():
 
     pygame.time.delay(1000)
 
-    start_btn_width, start_btn_height = 200, 80
+    start_btn_width, start_btn_height = 12*vw, 8*vh
     start_btn = pygame.Surface((start_btn_width, start_btn_height), pygame.SRCALPHA)
 
     # Draw text on the button
     
-    text = font_size(60).render("Start", True, "white")
+    text = font_size(4*vw).render("Start", True, "white")
     text_rect = text.get_rect(center=(start_btn_width // 2, start_btn_height // 2))
-    start_btn_rect = start_btn.get_rect(topright=(screenWidth - 20, 20))
+    start_btn_rect = start_btn.get_rect(topright=(screenWidth - 1*vw, 1*vh))
 
     start_btn.blit(text, text_rect)
     for alpha in range(0, 151, 10):
@@ -175,7 +189,7 @@ def gameStart():
     pygame.time.delay(1000)
 
     for alpha in range(0, 256, 1):
-        startText = font_size(180).render("You have until 9PM", True, (alpha, alpha, alpha))
+        startText = font_size(10*vw).render("You have until 9PM", True, (alpha, alpha, alpha))
         screen.blit(startText, (screenWidth // 2 - startText.get_width() // 2, screenHeight // 2 - startText.get_height() // 2))
         pygame.display.flip()
         pygame.time.delay(10)
@@ -192,17 +206,24 @@ def gameStart():
 
     pygame.time.delay(1000)
 
+    health = 10
+    gColor = 150
+    rColor = 0
+
     carStops.set_volume(0.8)
     carStops.play()
 
-    clock_text = font_size(70).render("8:00PM", True, (255, 255, 255))
+    clock_text = font_size(4*vw).render("8:00PM", True, (255, 255, 255))
     for alpha in range(255, -1, -1):
         fade_surface = pygame.Surface((screenWidth, screenHeight))
         fade_surface.fill((0, 0, 0))
         fade_surface.set_alpha(alpha)
         screen.blit(map1, (-10, 0))
-        screen.blit(timeHolder, (screenWidth // 2 - timeHolder.get_width() // 2, -20))
-        screen.blit(clock_text, (screenWidth // 2 - clock_text.get_width() // 2, 0))
+        screen.blit(timeHolder, (screenWidth // 2 - timeHolder.get_width() // 2, -2*vh))
+        screen.blit(clock_text, (screenWidth // 2 - clock_text.get_width() // 2, -0.5*vh))
+        pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 - 35*vw, 2*vh, 12.5*vw - 0.5*vw, 3*vh), 0, 100)
+        pygame.draw.rect(screen, (rColor, gColor, 0), (screenWidth // 2 - 35*vw, 2*vh, (health * 2*vw) -0.5*vw, 3*vh), 0, 100)
+        pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 - 35.5*vw, 1.5*vh, 12.5*vw, 3.8*vh), vw, 100)
         screen.blit(fade_surface, (0, 0))
         pygame.display.flip()
         pygame.time.delay(10)
@@ -217,12 +238,17 @@ def gameStart():
         in_game_hour = 8 + (in_game_minutes // 60)
         in_game_minutes = in_game_minutes % 60
 
-        clock_text = font_size(70).render(f"{in_game_hour}:{in_game_minutes:02}PM", True, (255, 255, 255))
-        screen.blit(timeHolder, (screenWidth // 2 - timeHolder.get_width() // 2, -20))
-        screen.blit(clock_text, (screenWidth // 2 - clock_text.get_width() // 2, 0))
+        clock_text = font_size(4*vw).render(f"{in_game_hour}:{in_game_minutes:02}PM", True, (255, 255, 255))
+        screen.blit(timeHolder, (screenWidth // 2 - timeHolder.get_width() // 2, -2*vh))
+        screen.blit(clock_text, (screenWidth // 2 - clock_text.get_width() // 2, -0.5*vh))
         if minuteChange != in_game_minutes:
             clockTick.play()
             minuteChange = in_game_minutes
+
+        
+        pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 - 35*vw, 2*vh, 12.5*vw - 0.5*vw, 3*vh), 0, 100)
+        pygame.draw.rect(screen, (rColor, gColor, 0), (screenWidth // 2 - 35*vw, 2*vh, (health * 2*vw) -0.5*vw, 3*vh), 0, 100)
+        pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 - 35.5*vw, 1.5*vh, 12.5*vw, 3.8*vh), vw, 100)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
