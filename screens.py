@@ -25,8 +25,20 @@ from assets import (
     map1,
     clockTick,
     carStops, 
+    timeHolder,
+    video_bg_music,
+    missionMusic,
+    map1,
+    clockTick,
+    carStops, 
     timeHolder
-)
+    )
+
+from functions import font_size, playVid
+
+screenWidth, screenHeight = 1600,900
+screen = pygame.display.set_mode((screenWidth, screenHeight))
+pygame.display.set_caption("GTA - Style Heist")
 pygame.display.set_icon(gameIcon)
 
 screen = values.screen
