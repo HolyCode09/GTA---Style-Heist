@@ -221,6 +221,8 @@ def gameStart():
     health = 10
     gColor = 150
     rColor = 0
+    ammo = 0
+    bulletSpace = 2*vw
 
     carStops.set_volume(0.8)
     carStops.play()
@@ -233,9 +235,14 @@ def gameStart():
         screen.blit(map1, (-10, 0))
         screen.blit(timeHolder, (screenWidth // 2 - timeHolder.get_width() // 2, -2*vh))
         screen.blit(clock_text, (screenWidth // 2 - clock_text.get_width() // 2, -0.5*vh))
-        pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 - 35*vw, 2*vh, 12.5*vw - 0.5*vw, 3*vh), 0, 100)
-        pygame.draw.rect(screen, (rColor, gColor, 0), (screenWidth // 2 - 35*vw, 2*vh, (health * 2*vw) -0.5*vw, 3*vh), 0, 100)
-        pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 - 35.5*vw, 1.5*vh, 12.5*vw, 3.8*vh), vw, 100)
+        pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 - 30*vw, 2*vh, (10 * 2*vw) - 0.5*vw, 3.5*vh), 0, 100)
+        pygame.draw.rect(screen, (rColor, gColor, 0), (screenWidth // 2 - 30*vw, 2*vh, (health * 2*vw) -0.5*vw, 3.5*vh), 0, 100)
+        pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 - 30.5*vw, 1.5*vh, 10 * 2*vw, 4.5*vh), 7%vw, 100)
+        
+        pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 + 10*vw, 2*vh, (10 * 2*vw) - 0.5*vw, 3.5*vh), 0, 100)
+        for bullets in range(ammo):
+            pygame.draw.rect(screen, (193, 151, 87), (screenWidth // 2 + 10.5*vw + bullets*bulletSpace, 2*vh, 1.3*vw, 3.5*vh))
+        pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 + 10*vw, 1.5*vh, 10 * 2*vw, 4.5*vh), 7%vw, 100)
         screen.blit(fade_surface, (0, 0))
         pygame.display.flip()
         pygame.time.delay(10)
@@ -258,14 +265,32 @@ def gameStart():
             minuteChange = in_game_minutes
 
         
-        pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 - 35*vw, 2*vh, 12.5*vw - 0.5*vw, 3*vh), 0, 100)
-        pygame.draw.rect(screen, (rColor, gColor, 0), (screenWidth // 2 - 35*vw, 2*vh, (health * 2*vw) -0.5*vw, 3*vh), 0, 100)
-        pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 - 35.5*vw, 1.5*vh, 12.5*vw, 3.8*vh), vw, 100)
+        pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 - 30*vw, 2*vh, (10 * 2*vw) - 0.5*vw, 3.5*vh), 0, 100)
+        pygame.draw.rect(screen, (rColor, gColor, 0), (screenWidth // 2 - 30*vw, 2*vh, (health * 2*vw) -0.5*vw, 3.5*vh), 0, 100)
+        pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 - 30.5*vw, 1.5*vh, 10 * 2*vw, 4.5*vh), 7%vw, 100)
+
+        pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 + 10*vw, 2*vh, (10 * 2*vw) - 0.5*vw, 3.5*vh), 0, 100)
+        for bullets in range(ammo):
+            pygame.draw.rect(screen, (193, 151, 87), (screenWidth // 2 + 10.5*vw + bullets*bulletSpace, 2*vh, 1.3*vw, 3.5*vh))
+        pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 + 10*vw, 1.5*vh, 10 * 2*vw, 4.5*vh), 7%vw, 100)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP and health < 10:
+                    health += 1
+                    if health <= 5:
+                        gColor += 30
+                    if health > 5:
+                        rColor -= 30
+                elif event.key == pygame.K_DOWN and health > 0:
+                    health -= 1
+                    if health > 4:
+                        rColor += 30
+                    if health <= 4:
+                        gColor -= 30
         pygame.display.flip()
         clock.tick(60)
 
