@@ -31,13 +31,19 @@ from assets import (
     map1,
     clockTick,
     carStops, 
-    timeHolder
+    timeHolder,
+    left,
+    right,
+    up,
+    down,
+    down_left,
+    down_right,
+    up_left,
+    up_right
     )
 
 from functions import font_size, playVid
 
-screenWidth, screenHeight = 1600,900
-screen = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("GTA - Style Heist")
 pygame.display.set_icon(gameIcon)
 
@@ -47,7 +53,6 @@ screenHeight = values.screenHeight
 vw = values.vw
 vh = values.vh
 
-print(screenWidth, screenHeight, vw, vh)
 
 
 def StartScreen():
@@ -179,7 +184,7 @@ def preGameVideo():
     video_bg_music.set_volume(0)
     video_bg_music.play(-1)
     for i in range(11):
-        video_bg_music.set_volume(0.05 * i / 10)
+        video_bg_music.set_volume(0.005 * i / 10)
         pygame.time.delay(100)
     pygame.time.delay(1000)
     playVid("video/gameVideo.mp4", screen, screenWidth, screenHeight)
@@ -187,6 +192,19 @@ def preGameVideo():
     gameStart()
     return
 
+
+
+missionsInOrder = [
+    "Break into the underground-bank-hallway",
+    "Knock the guard down",
+    "Search for the Suit-Vault",
+    "Find the key to the vault",
+    "Open the vault and take the suit",
+    "Escape the bank and get in the car",
+    "Lose the police",
+    "Feed Mitzi",
+    "Go back to the car to get to the restaurant"
+    ]
 
 def gameStart():
     missionMusic.set_volume(1)
@@ -227,6 +245,8 @@ def gameStart():
     carStops.set_volume(0.8)
     carStops.play()
 
+    Oria = left
+
     clock_text = font_size(4*vw).render("8:00PM", True, (255, 255, 255))
     for alpha in range(255, -1, -1):
         fade_surface = pygame.Surface((screenWidth, screenHeight))
@@ -243,12 +263,34 @@ def gameStart():
         for bullets in range(ammo):
             pygame.draw.rect(screen, (193, 151, 87), (screenWidth // 2 + 10.5*vw + bullets*bulletSpace, 2*vh, 1.3*vw, 3.5*vh))
         pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 + 10*vw, 1.5*vh, 10 * 2*vw, 4.5*vh), 7%vw, 100)
+
+        screen.blit(Oria, (50 * vw, 50 * vh))
         screen.blit(fade_surface, (0, 0))
         pygame.display.flip()
         pygame.time.delay(10)
 
     start_ticks = pygame.time.get_ticks()
+    OriaX = 50
+    OriaY = 50
+    Poses = [
+        left,
+        right,
+        up,
+        down,
+        up_left,
+        up_right,
+        down_left,
+        down_right
+    ]
+    originalW, originalH = Oria.get_size()
+    scaleAmount = 1.0  # no scaling yet
     while True:
+
+
+        scaleW = originalW * scaleAmount
+        scaleH = originalH * scaleAmount
+
+
         screen.blit(map1, (-10, 0))
 
         current_ticks = pygame.time.get_ticks()
@@ -274,23 +316,73 @@ def gameStart():
             pygame.draw.rect(screen, (193, 151, 87), (screenWidth // 2 + 10.5*vw + bullets*bulletSpace, 2*vh, 1.3*vw, 3.5*vh))
         pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 + 10*vw, 1.5*vh, 10 * 2*vw, 4.5*vh), 7%vw, 100)
 
+        screen.blit(Oria, (OriaX * vw, OriaY * vh))
+
+        for i in range(len(Poses)):
+            Poses[i] = pygame.transform.scale(Poses[i], (scaleW, scaleH))
+
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP and health < 10:
-                    health += 1
-                    if health <= 5:
-                        gColor += 30
-                    if health > 5:
-                        rColor -= 30
-                elif event.key == pygame.K_DOWN and health > 0:
-                    health -= 1
-                    if health > 4:
-                        rColor += 30
-                    if health <= 4:
-                        gColor -= 30
+                # if event.key == pygame.K_UP and health < 10:
+                #     health += 1
+                #     if health <= 5:
+                #         gColor += 30
+                #     if health > 5:
+                #         rColor -= 30
+                # elif event.key == pygame.K_DOWN and health > 0:
+                #     health -= 1
+                #     if health > 4:
+                #         rColor += 30
+                #     if health <= 4:
+                #         gColor -= 30
+            
+        keys = pygame.key.get_pressed()
+
+        print(scaleW, scaleH)
+        print(Oria.get_size())
+        print(scaleAmount)
+
+
+        if keys[pygame.K_s] and keys[pygame.K_d]:
+            Oria = Poses[7]
+            scaleAmount += 0.005
+            OriaX += 0.3
+            OriaY += 0.3
+        elif keys[pygame.K_s] and keys[pygame.K_a]:
+            Oria = Poses[6]
+            scaleAmount += 0.005
+            OriaX -= 0.3
+            OriaY += 0.3
+        elif keys[pygame.K_w] and keys[pygame.K_a]:
+            Oria = Poses[4]
+            scaleAmount -= 0.005
+            OriaX -= 0.3
+            OriaY -= 0.3
+        elif keys[pygame.K_w] and keys[pygame.K_d]:
+            Oria = Poses[5]
+            scaleAmount -= 0.005
+            OriaX += 0.3
+            OriaY -= 0.3
+        elif keys[pygame.K_a]:
+            Oria = Poses[0]
+            OriaX -= 0.3
+        elif keys[pygame.K_d]:
+            Oria = Poses[1]
+            OriaX += 0.3
+        elif keys[pygame.K_w]:
+            Oria = Poses[2]
+            scaleAmount -= 0.005
+            OriaY -= 0.3
+        elif keys[pygame.K_s]:
+            Oria = Poses[3]
+            scaleAmount += 0.005
+            OriaY += 0.3
+        
+        
+
         pygame.display.flip()
         clock.tick(60)
 

@@ -8,6 +8,15 @@ charactersPic = load_img("pics/characters.png", (screenWidth + 10, screenHeight 
 bgPic = load_img("pics/gameEnter.png", (screenWidth, screenHeight))
 map1 = load_img("pics/maps/map1.png", (screenWidth + 10, screenHeight))
 timeHolder = load_img("pics/screenAssets/timeHolder.png", (20 * vw, 10 * vh))
+#Oria_no_gun
+left = load_img("pics/Oria_poses_no_gun/left.jpg", (6 * vw, 20* vh))
+right = load_img("pics/Oria_poses_no_gun/right.jpg", (6 * vw, 20* vh))
+up = load_img("pics/Oria_poses_no_gun/up.jpg", (6 * vw, 20* vh))
+down = load_img("pics/Oria_poses_no_gun/down.jpg", (6 * vw, 20* vh))
+down_left = load_img("pics/Oria_poses_no_gun/down_left.jpg", (6 * vw, 20* vh))
+down_right = load_img("pics/Oria_poses_no_gun/down_right.jpg", (6 * vw, 20* vh))
+up_left = load_img("pics/Oria_poses_no_gun/up_left.jpg", (6 * vw, 20* vh))
+up_right = load_img("pics/Oria_poses_no_gun/up_right.jpg", (6 * vw, 20* vh))
 
 #sounds
 opening_theme = load_sound("sounds/OpeningTheme.mp3")

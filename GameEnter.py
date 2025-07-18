@@ -1,5 +1,5 @@
 import pygame
 pygame.init()
-from screens import gameStart
+from screens import StartScreen
 
-gameStart()
+StartScreen()
