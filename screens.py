@@ -184,7 +184,7 @@ def preGameVideo():
     video_bg_music.set_volume(0)
     video_bg_music.play(-1)
     for i in range(11):
-        video_bg_music.set_volume(0.005 * i / 10)
+        video_bg_music.set_volume(0.1 * i / 10)
         pygame.time.delay(100)
     pygame.time.delay(1000)
     playVid("video/gameVideo.mp4", screen, screenWidth, screenHeight)
@@ -219,6 +219,12 @@ def gameStart():
     pygame.time.delay(1000)
 
     for alpha in range(0, 256, 1):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pass 
         startText = font_size(10*vw).render("You have until 9PM", True, (alpha, alpha, alpha))
         screen.blit(startText, (screenWidth // 2 - startText.get_width() // 2, screenHeight // 2 - startText.get_height() // 2))
         pygame.display.flip()
@@ -226,13 +232,18 @@ def gameStart():
 
     pygame.time.delay(4000)
 
-    for alpha in range(0, 256, 10):
-        fade_surface = pygame.Surface((screenWidth, screenHeight))
-        fade_surface.fill((0, 0, 0))
-        fade_surface.set_alpha(alpha)
-        screen.blit(fade_surface, (0, 0))
+    for alpha in range(255, -1, -10):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pass 
+        screen.fill((0, 0, 0))
+        startText = font_size(10*vw).render("You have until 9PM", True, (alpha, alpha, alpha))
+        screen.blit(startText, (screenWidth // 2 - startText.get_width() // 2, screenHeight // 2 - startText.get_height() // 2))
         pygame.display.flip()
-        pygame.time.delay(20)
+        pygame.time.delay(10)
 
     pygame.time.delay(1000)
 
@@ -249,6 +260,12 @@ def gameStart():
 
     clock_text = font_size(4*vw).render("8:00PM", True, (255, 255, 255))
     for alpha in range(255, -1, -1):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pass 
         fade_surface = pygame.Surface((screenWidth, screenHeight))
         fade_surface.fill((0, 0, 0))
         fade_surface.set_alpha(alpha)
@@ -284,6 +301,13 @@ def gameStart():
     ]
     originalW, originalH = Oria.get_size()
     scaleAmount = 1.0  # no scaling yet
+
+    no_go_barriers = [
+        (pygame.Surface((40 * vw, screenHeight * 1.6), pygame.SRCALPHA), (screenWidth // 2 - 68*vw, -30 * vh), 32),
+        (pygame.Surface((40 * vw, screenHeight * 2), pygame.SRCALPHA), (screenWidth // 2 + 2 * vw, -40 * vh), 40),
+        (pygame.Surface((screenWidth * 1.6, 35 * vh), pygame.SRCALPHA), (-10, screenHeight // 2 - 68 * vh), 0),
+        ]
+
     while True:
 
 
@@ -318,6 +342,11 @@ def gameStart():
 
         screen.blit(Oria, (OriaX * vw, OriaY * vh))
 
+        for barrier in no_go_barriers:
+            barrier[0].fill((0, 0, 0, 128))  # transparent surface
+            rotatedBarrier = pygame.transform.rotate(barrier[0], barrier[2])  # rotate the surface
+            screen.blit(rotatedBarrier, barrier[1])
+
         for i in range(len(Poses)):
             Poses[i] = pygame.transform.scale(Poses[i], (scaleW, scaleH))
 
@@ -341,29 +370,25 @@ def gameStart():
             
         keys = pygame.key.get_pressed()
 
-        print(scaleW, scaleH)
-        print(Oria.get_size())
-        print(scaleAmount)
-
 
         if keys[pygame.K_s] and keys[pygame.K_d]:
             Oria = Poses[7]
-            scaleAmount += 0.005
+            scaleAmount += 0.002
             OriaX += 0.3
             OriaY += 0.3
         elif keys[pygame.K_s] and keys[pygame.K_a]:
             Oria = Poses[6]
-            scaleAmount += 0.005
+            scaleAmount += 0.002
             OriaX -= 0.3
             OriaY += 0.3
         elif keys[pygame.K_w] and keys[pygame.K_a]:
             Oria = Poses[4]
-            scaleAmount -= 0.005
+            scaleAmount -= 0.002
             OriaX -= 0.3
             OriaY -= 0.3
         elif keys[pygame.K_w] and keys[pygame.K_d]:
             Oria = Poses[5]
-            scaleAmount -= 0.005
+            scaleAmount -= 0.002
             OriaX += 0.3
             OriaY -= 0.3
         elif keys[pygame.K_a]:
@@ -374,11 +399,11 @@ def gameStart():
             OriaX += 0.3
         elif keys[pygame.K_w]:
             Oria = Poses[2]
-            scaleAmount -= 0.005
+            scaleAmount -= 0.002
             OriaY -= 0.3
         elif keys[pygame.K_s]:
             Oria = Poses[3]
-            scaleAmount += 0.005
+            scaleAmount += 0.002
             OriaY += 0.3
         
         

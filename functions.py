@@ -31,8 +31,6 @@ def playVid(path, screen, screenWidth, screenHeight):
                 vid.close()
                 pygame.quit()
                 exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                done = True
 
         if done:
             break
