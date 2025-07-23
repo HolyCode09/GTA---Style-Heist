@@ -184,7 +184,7 @@ def preGameVideo():
     video_bg_music.set_volume(0)
     video_bg_music.play(-1)
     for i in range(11):
-        video_bg_music.set_volume(0.1 * i / 10)
+        video_bg_music.set_volume(0.05 * i / 10)
         pygame.time.delay(100)
     pygame.time.delay(1000)
     playVid("video/gameVideo.mp4", screen, screenWidth, screenHeight)
@@ -211,11 +211,8 @@ def gameStart():
     missionMusic.play(-1)
 
     clock = pygame.time.Clock()
-
     minuteChange = 0
-
     screen.fill((0, 0, 0))
-
     pygame.time.delay(1000)
 
     for alpha in range(0, 256, 1):
@@ -223,8 +220,6 @@ def gameStart():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                pass 
         startText = font_size(10*vw).render("You have until 9PM", True, (alpha, alpha, alpha))
         screen.blit(startText, (screenWidth // 2 - startText.get_width() // 2, screenHeight // 2 - startText.get_height() // 2))
         pygame.display.flip()
@@ -237,8 +232,6 @@ def gameStart():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                pass 
         screen.fill((0, 0, 0))
         startText = font_size(10*vw).render("You have until 9PM", True, (alpha, alpha, alpha))
         screen.blit(startText, (screenWidth // 2 - startText.get_width() // 2, screenHeight // 2 - startText.get_height() // 2))
@@ -257,15 +250,13 @@ def gameStart():
     carStops.play()
 
     Oria = left
-
     clock_text = font_size(4*vw).render("8:00PM", True, (255, 255, 255))
+
     for alpha in range(255, -1, -1):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                pass 
         fade_surface = pygame.Surface((screenWidth, screenHeight))
         fade_surface.fill((0, 0, 0))
         fade_surface.set_alpha(alpha)
@@ -275,12 +266,10 @@ def gameStart():
         pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 - 30*vw, 2*vh, (10 * 2*vw) - 0.5*vw, 3.5*vh), 0, 100)
         pygame.draw.rect(screen, (rColor, gColor, 0), (screenWidth // 2 - 30*vw, 2*vh, (health * 2*vw) -0.5*vw, 3.5*vh), 0, 100)
         pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 - 30.5*vw, 1.5*vh, 10 * 2*vw, 4.5*vh), 7%vw, 100)
-        
         pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 + 10*vw, 2*vh, (10 * 2*vw) - 0.5*vw, 3.5*vh), 0, 100)
         for bullets in range(ammo):
             pygame.draw.rect(screen, (193, 151, 87), (screenWidth // 2 + 10.5*vw + bullets*bulletSpace, 2*vh, 1.3*vw, 3.5*vh))
         pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 + 10*vw, 1.5*vh, 10 * 2*vw, 4.5*vh), 7%vw, 100)
-
         screen.blit(Oria, (50 * vw, 50 * vh))
         screen.blit(fade_surface, (0, 0))
         pygame.display.flip()
@@ -289,39 +278,23 @@ def gameStart():
     start_ticks = pygame.time.get_ticks()
     OriaX = 50
     OriaY = 50
-    Poses = [
-        left,
-        right,
-        up,
-        down,
-        up_left,
-        up_right,
-        down_left,
-        down_right
-    ]
+    Poses = [left, right, up, down, up_left, up_right, down_left, down_right]
     originalW, originalH = Oria.get_size()
-    scaleAmount = 1.0  # no scaling yet
+    scaleAmount = 1.0
 
     no_go_barriers = [
-        (pygame.Surface((40 * vw, screenHeight * 1.6), pygame.SRCALPHA), (screenWidth // 2 - 68*vw, -30 * vh), 32),
-        (pygame.Surface((40 * vw, screenHeight * 2), pygame.SRCALPHA), (screenWidth // 2 + 2 * vw, -40 * vh), 40),
-        (pygame.Surface((screenWidth * 1.6, 35 * vh), pygame.SRCALPHA), (-10, screenHeight // 2 - 68 * vh), 0),
-        ]
+        (pygame.Surface((40 * vw, screenHeight * 1.6), pygame.SRCALPHA), (screenWidth // 2 - 50*vw, -30 * vh), 32),
+        (pygame.Surface((40 * vw, screenHeight * 2), pygame.SRCALPHA), (screenWidth // 2 + 45 * vw, -40 * vh), 40),
+        (pygame.Surface((screenWidth * 1.6, 35 * vh), pygame.SRCALPHA), (-0.5 * vw, screenHeight // 2 - 80 * vh), 0),
+    ]
 
     while True:
-
-
-        scaleW = originalW * scaleAmount
-        scaleH = originalH * scaleAmount
-
-
         screen.blit(map1, (-10, 0))
-
         current_ticks = pygame.time.get_ticks()
         elapsed_time = current_ticks - start_ticks
         in_game_minutes = elapsed_time // 20000
         in_game_hour = 8 + (in_game_minutes // 60)
-        in_game_minutes = in_game_minutes % 60
+        in_game_minutes %= 60
 
         clock_text = font_size(4*vw).render(f"{in_game_hour}:{in_game_minutes:02}PM", True, (255, 255, 255))
         screen.blit(timeHolder, (screenWidth // 2 - timeHolder.get_width() // 2, -2*vh))
@@ -330,84 +303,97 @@ def gameStart():
             clockTick.play()
             minuteChange = in_game_minutes
 
-        
+        #comments# Clear barrier data list before each frame
+        barrier_data = []
+
+        for surface, pos, angle in no_go_barriers:
+            surface.fill((0, 0, 0, 255))  # Fully opaque for mask
+            rotated_surface = pygame.transform.rotate(surface, angle)
+            original_rect = surface.get_rect(topleft=pos)
+            rotated_rect = rotated_surface.get_rect(center=original_rect.center)
+
+            #comments# Create mask for pixel-perfect collision
+            mask = pygame.mask.from_surface(rotated_surface)
+
+            #comments# Create almost invisible surface for drawing
+            draw_surface = rotated_surface.copy()
+            draw_surface.set_alpha(1)  # Almost invisible
+
+            screen.blit(draw_surface, rotated_rect.topleft)
+
+            barrier_data.append((mask, rotated_rect))
+
+        # Draw HUD elements (health, ammo, etc.)
         pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 - 30*vw, 2*vh, (10 * 2*vw) - 0.5*vw, 3.5*vh), 0, 100)
         pygame.draw.rect(screen, (rColor, gColor, 0), (screenWidth // 2 - 30*vw, 2*vh, (health * 2*vw) -0.5*vw, 3.5*vh), 0, 100)
         pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 - 30.5*vw, 1.5*vh, 10 * 2*vw, 4.5*vh), 7%vw, 100)
-
         pygame.draw.rect(screen, (0, 0, 0), (screenWidth // 2 + 10*vw, 2*vh, (10 * 2*vw) - 0.5*vw, 3.5*vh), 0, 100)
         for bullets in range(ammo):
             pygame.draw.rect(screen, (193, 151, 87), (screenWidth // 2 + 10.5*vw + bullets*bulletSpace, 2*vh, 1.3*vw, 3.5*vh))
         pygame.draw.rect(screen, (255, 255, 255), (screenWidth // 2 + 10*vw, 1.5*vh, 10 * 2*vw, 4.5*vh), 7%vw, 100)
 
+        #comments# Scale poses before using
+        scaleW = int(originalW * scaleAmount)
+        scaleH = int(originalH * scaleAmount)
+        Poses = [pygame.transform.scale(p, (scaleW, scaleH)) for p in Poses]
+
+        #comments# Make sure Oria is updated to scaled pose if needed
+        # This assumes Oria was always from Poses
+        # If Oria is not in Poses for some reason, fallback to first pose
+        # if Oria in Poses:
+        #     Oria = Poses[Poses.index(Oria)]
+        # else:
+        #     Oria = Poses[0]
+
+        player_rect = Oria.get_rect(topleft=(OriaX * vw, OriaY * vh))
+
+        #comments# Create player mask from scaled Oria
+        player_mask = pygame.mask.from_surface(Oria)
+
         screen.blit(Oria, (OriaX * vw, OriaY * vh))
-
-        for barrier in no_go_barriers:
-            barrier[0].fill((0, 0, 0, 128))  # transparent surface
-            rotatedBarrier = pygame.transform.rotate(barrier[0], barrier[2])  # rotate the surface
-            screen.blit(rotatedBarrier, barrier[1])
-
-        for i in range(len(Poses)):
-            Poses[i] = pygame.transform.scale(Poses[i], (scaleW, scaleH))
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-                # if event.key == pygame.K_UP and health < 10:
-                #     health += 1
-                #     if health <= 5:
-                #         gColor += 30
-                #     if health > 5:
-                #         rColor -= 30
-                # elif event.key == pygame.K_DOWN and health > 0:
-                #     health -= 1
-                #     if health > 4:
-                #         rColor += 30
-                #     if health <= 4:
-                #         gColor -= 30
-            
+
         keys = pygame.key.get_pressed()
 
+        movement_speed = 0.3 * 1.5  # 20% faster
 
-        if keys[pygame.K_s] and keys[pygame.K_d]:
-            Oria = Poses[7]
-            scaleAmount += 0.002
-            OriaX += 0.3
-            OriaY += 0.3
-        elif keys[pygame.K_s] and keys[pygame.K_a]:
-            Oria = Poses[6]
-            scaleAmount += 0.002
-            OriaX -= 0.3
-            OriaY += 0.3
-        elif keys[pygame.K_w] and keys[pygame.K_a]:
-            Oria = Poses[4]
-            scaleAmount -= 0.002
-            OriaX -= 0.3
-            OriaY -= 0.3
-        elif keys[pygame.K_w] and keys[pygame.K_d]:
-            Oria = Poses[5]
-            scaleAmount -= 0.002
-            OriaX += 0.3
-            OriaY -= 0.3
-        elif keys[pygame.K_a]:
-            Oria = Poses[0]
-            OriaX -= 0.3
-        elif keys[pygame.K_d]:
-            Oria = Poses[1]
-            OriaX += 0.3
-        elif keys[pygame.K_w]:
-            Oria = Poses[2]
-            scaleAmount -= 0.002
-            OriaY -= 0.3
-        elif keys[pygame.K_s]:
-            Oria = Poses[3]
-            scaleAmount += 0.002
-            OriaY += 0.3
-        
-        
+        movement_keys = [
+            (keys[pygame.K_s] and keys[pygame.K_d], Poses[7], (movement_speed, movement_speed), +0.002, [0, 1], True),
+            (keys[pygame.K_s] and keys[pygame.K_a], Poses[6], (-movement_speed, movement_speed), +0.002, [0], True),
+            (keys[pygame.K_w] and keys[pygame.K_a], Poses[4], (-movement_speed, -movement_speed), -0.002, [0, 2], False),
+            (keys[pygame.K_w] and keys[pygame.K_d], Poses[5], (movement_speed, -movement_speed), -0.002, [1, 2], False),
+            (keys[pygame.K_a], Poses[0], (-movement_speed, 0), 0, [0], False),
+            (keys[pygame.K_d], Poses[1], (movement_speed, 0), 0, [1], False),
+            (keys[pygame.K_w], Poses[2], (0, -movement_speed), -0.002, [1, 2], False),
+            (keys[pygame.K_s], Poses[3], (0, movement_speed), +0.002, [0], True),
+        ]
+
+        for condition, pose, (dx, dy), scale_change, barriers_to_check, check_bottom in movement_keys:
+            if condition:
+                Oria = pose
+                proposed_rect = player_rect.move(dx * vw, dy * vh)
+
+                #comments# Pixel-perfect mask collision check
+                blocked = False
+                for i in barriers_to_check:
+                    mask, barrier_rect = barrier_data[i]
+                    offset = (int(proposed_rect.x - barrier_rect.x), int(proposed_rect.y - barrier_rect.y))
+                    if mask.overlap(player_mask, offset):
+                        blocked = True
+                        break
+
+                if not blocked and (not check_bottom or proposed_rect.bottom < screenHeight):
+                    OriaX += dx
+                    OriaY += dy
+                    scaleAmount += scale_change
+                break
 
         pygame.display.flip()
         clock.tick(60)
+
+
 
